@@ -370,10 +370,14 @@ async function loadReviews() {
     const reviewsList = document.getElementById('reviews-list');
     if (!reviewsList) return;
 
-    try {
-        reviewsList.innerHTML = '<p class="loading-reviews">Memuat review...</p>';
+    reviewsList.innerHTML = '<p class="loading-reviews">Memuat review...</p>';
 
-        const res = await fetch(`${SUPABASE_URL}/rest/v1/komentar?order=created_at.desc&limit=20`, {
+    try {
+        const url = `${SUPABASE_URL}/rest/v1/komentar?order=created_at.desc&limit=20`;
+        console.log('Fetching:', url);
+
+        const res = await fetch(url, {
+            method: 'GET',
             headers: {
                 'apikey': SUPABASE_KEY,
                 'Authorization': `Bearer ${SUPABASE_KEY}`,
@@ -381,9 +385,9 @@ async function loadReviews() {
             }
         });
 
-        if (!res.ok) throw new Error(`HTTP error: ${res.status}`);
-
+        console.log('Status:', res.status);
         const data = await res.json();
+        console.log('Data:', data);
 
         if (!Array.isArray(data) || data.length === 0) {
             reviewsList.innerHTML = '<p class="no-reviews">Belum ada review. Jadilah yang pertama! 😊</p>';
@@ -402,11 +406,10 @@ async function loadReviews() {
         `).join('');
 
     } catch (err) {
-        console.error('Review load error:', err);
+        console.error('Review error:', err);
         reviewsList.innerHTML = '<p class="no-reviews">Gagal memuat review. Coba refresh halaman.</p>';
     }
 }
-
 async function submitReview() {
     const nama = document.getElementById('review-nama').value.trim();
     const pesan = document.getElementById('review-pesan').value.trim();
@@ -474,18 +477,26 @@ function formatTanggal(dateStr) {
 }
 
 // Star rating
+
 let selectedRating = 0;
 document.querySelectorAll('.star').forEach(star => {
     star.addEventListener('mouseover', function () {
         const val = parseInt(this.dataset.value);
-        document.querySelectorAll('.star').forEach((s, i) => s.classList.toggle('active', i < val));
+        document.querySelectorAll('.star').forEach((s, i) => {
+            s.classList.toggle('active', i < val);
+        });
     });
     star.addEventListener('mouseout', function () {
-        document.querySelectorAll('.star').forEach((s, i) => s.classList.toggle('active', i < selectedRating));
+        document.querySelectorAll('.star').forEach((s, i) => {
+            s.classList.toggle('active', i < selectedRating);
+        });
     });
-    star.addEventListener('click', function () {
+    star.addEventListener('click', function (e) {
+        e.stopPropagation();
         selectedRating = parseInt(this.dataset.value);
-        document.querySelectorAll('.star').forEach((s, i) => s.classList.toggle('active', i < selectedRating));
+        document.querySelectorAll('.star').forEach((s, i) => {
+            s.classList.toggle('active', i < selectedRating);
+        });
     });
 });
 
