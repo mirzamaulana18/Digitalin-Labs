@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="id" style="scroll-behavior: smooth;">
 <head>
-
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
@@ -11,41 +10,60 @@
     <meta name="keywords" content="jasa website Jakarta, jasa UI/UX design, jasa desain grafis, jasa landing page, DigitalinLabs">
     <meta name="author" content="DigitalinLabs">
     <meta name="robots" content="index, follow">
-
-    <!-- Canonical URL (ganti sesuai domain Anda) -->
     <link rel="canonical" href="https://digitalin-labs.vercel.app">
-    <title>DigitalinLabs | Jasa Digital Kreatif</title>
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="DigitalinLabs | Jasa Website, UI/UX & Desain Grafis Jakarta">
+    <meta property="og:description" content="Jasa pembuatan website profesional, UI/UX design, desain grafis, dan mentoring digital di Jakarta. Konsultasi gratis!">
+    <meta property="og:url" content="https://digitalin-labs.vercel.app/">
+    <meta property="og:image" content="https://digitalin-labs.vercel.app/media/official_logo.png">
+    <meta property="og:locale" content="id_ID">
+    <meta property="og:site_name" content="DigitalinLabs">
+
+    <!-- Twitter/X Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="DigitalinLabs | Jasa Website, UI/UX & Desain Grafis Jakarta">
+    <meta name="twitter:description" content="Jasa pembuatan website profesional, UI/UX design, desain grafis, dan mentoring digital di Jakarta. Konsultasi gratis!">
+    <meta name="twitter:image" content="https://digitalin-labs.vercel.app/media/official_logo.png">
+
+    <!-- Google Verification -->
+    <meta name="google-site-verification" content="wbKt4Yd3ndHP49-Nepkg6UuCSXa-u5g5CQcficbjkcE" />
+
+    <!-- Security Headers -->
+    <meta http-equiv="Content-Security-Policy"
+          content="default-src 'self';
+                   script-src 'self' https://unpkg.com;
+                   style-src 'self' https://fonts.googleapis.com https://unpkg.com 'unsafe-inline';
+                   font-src https://fonts.gstatic.com;
+                   img-src 'self' data: https:;
+                   connect-src 'self' https://mmbyfihyirhfwqwiqvvi.supabase.co;
+                   frame-ancestors 'none';
+                   base-uri 'self';
+                   form-action 'self';">
+    <meta http-equiv="X-Content-Type-Options" content="nosniff">
+    <meta http-equiv="X-Frame-Options" content="DENY">
+    <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin">
+    <meta http-equiv="Permissions-Policy" content="geolocation=(), microphone=(), camera=()">
+
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" 
-      rel="stylesheet"
-      integrity="sha384-0UIoOAsgfgYLOtB5f9T4CpckNBSaRCHVpBH6BaJJMXbLpH9Bk0Kf3FBqhiepJl5"
-      crossorigin="anonymous">
-
-    <!-- Open Graph (Facebook, WhatsApp, LinkedIn) -->
-<meta property="og:type" content="website">
-<meta property="og:title" content="DigitalinLabs | Jasa Website, UI/UX & Desain Grafis Jakarta">
-<meta property="og:description" content="Jasa pembuatan website profesional, UI/UX design, desain grafis, dan mentoring digital di Jakarta. Konsultasi gratis!">
-<meta property="og:url" content="https://digitalinlabs.vercel.app/">
-<meta property="og:image" content="https://digitalinlabs.vercel.app/media/official_logo.png">
-<meta property="og:locale" content="id_ID">
-<meta property="og:site_name" content="DigitalinLabs">
-
-<!-- Twitter/X Card -->
-<meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="DigitalinLabs | Jasa Website, UI/UX & Desain Grafis Jakarta">
-<meta name="twitter:description" content="Jasa pembuatan website profesional, UI/UX design, desain grafis, dan mentoring digital di Jakarta. Konsultasi gratis!">
-<meta name="twitter:image" content="https://digitalinlabs.vercel.app/media/official_logo.png">
-
-<meta name="google-site-verification" content="wbKt4Yd3ndHP49-Nepkg6UuCSXa-u5g5CQcficbjkcE" />
-
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css"
+          rel="stylesheet"
+          integrity="sha384-0UIoOAsgfgYLOtB5f9T4CpckNBSaRCHVpBH6BaJJMXbLpH9Bk0Kf3FBqhiepJl5"
+          crossorigin="anonymous">
 </head>
 <body>
 
     <!-- ===== NAVBAR ===== -->
     <header id="navbar">
         <div class="container nav-wrapper">
-            <img src="./media/official_logo.png" alt="DigitalinLabs" class="logo-img">
+            <a href="#home">
+                <img src="./media/official_logo.png"
+                     alt="DigitalinLabs - Jasa Website dan Desain Digital Jakarta"
+                     class="logo-img"
+                     width="160" height="50" loading="eager">
+            </a>
             <nav>
                 <ul id="nav-menu">
                     <li><a href="#about">Tentang</a></li>
@@ -70,7 +88,7 @@
         <div class="container" data-aos="fade-up" data-aos-duration="900">
             <span class="hero-badge">🚀 Solusi Digital Terpercaya</span>
             <h1>Wujudkan Bisnis Digital<br><span class="highlight">Impian Anda</span></h1>
-            <p>Jasa pembuatan Website, UI/UX Design, Tugas Laporan, Tugas Data Science, Desain Grafis, dan Mentoring Skripsi IT </p>
+            <p>Jasa pembuatan Website, UI/UX Design, Tugas Laporan, Tugas Data Science, Desain Grafis, dan Mentoring Skripsi IT</p>
             <div class="hero-cta">
                 <a href="#services" class="btn btn-primary">Lihat Layanan</a>
                 <a href="#portfolio" class="btn btn-outline">Lihat Portfolio</a>
@@ -87,7 +105,7 @@
                 </div>
                 <div class="stat-divider"></div>
                 <div class="stat-item">
-                    <strong>1Thn</strong>
+                    <strong>1 Thn</strong>
                     <span>Pengalaman</span>
                 </div>
             </div>
@@ -113,10 +131,22 @@
                 </div>
                 <div class="about-visual" data-aos="fade-left">
                     <div class="about-card-stack">
-                        <div class="about-card ac-1">🌐<br>Web Development</div>
-                        <div class="about-card ac-2">🎨<br>UI/UX Design</div>
-                        <div class="about-card ac-3">📊<br>Data Science</div>
-                        <div class="about-card ac-4">🎓<br>Laporan dan Mentoring Skripsi (IT)</div>
+                        <div class="about-card ac-1">
+                            <span class="card-emoji">🌐</span>
+                            <span class="card-label">Web Development</span>
+                        </div>
+                        <div class="about-card ac-2">
+                            <span class="card-emoji">🎨</span>
+                            <span class="card-label">UI/UX Design</span>
+                        </div>
+                        <div class="about-card ac-3">
+                            <span class="card-emoji">📊</span>
+                            <span class="card-label">Data Science</span>
+                        </div>
+                        <div class="about-card ac-4">
+                            <span class="card-emoji">🎓</span>
+                            <span class="card-label">Laporan & Mentoring</span>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -160,7 +190,7 @@
                         <li>Dashboard Analitik</li>
                         <li>Proyek Computer Vision</li>
                     </ul>
-                    <button class="btn btn-outline wa-btn" data-service="Jasa Pembuatan Laporan & Analitik">Pesan Sekarang</button>
+                    <button class="btn btn-outline wa-btn" data-service="Jasa Data Science">Pesan Sekarang</button>
                 </div>
                 <div class="card" data-aos="fade-up" data-aos-delay="400">
                     <div class="card-icon">🖼️</div>
@@ -175,14 +205,14 @@
                 </div>
                 <div class="card" data-aos="fade-up" data-aos-delay="500">
                     <div class="card-icon">🎓</div>
-                    <h3> Tugas Laporan dan Mentoring Skripsi</h3>
-                    <p>Bimbingan langsung untuk skripsi ataupun tugas laporan anda.</p>
+                    <h3>Tugas Laporan & Mentoring Skripsi</h3>
+                    <p>Bimbingan langsung untuk skripsi ataupun tugas laporan Anda.</p>
                     <ul class="service-list">
                         <li>1-on-1 Coaching</li>
                         <li>Review Tugas Akhir</li>
                         <li>Pembuatan Tugas Harian</li>
                     </ul>
-                    <button class="btn btn-outline wa-btn" data-service="Mentoring Profesional">Pesan Sekarang</button>
+                    <button class="btn btn-outline wa-btn" data-service="Mentoring & Tugas Laporan">Pesan Sekarang</button>
                 </div>
                 <div class="card card-cta" data-aos="fade-up" data-aos-delay="600">
                     <div class="card-icon">💬</div>
@@ -201,11 +231,10 @@
             <h2 class="section-title" data-aos="fade-up">Pilih Paket yang Sesuai</h2>
             <p class="section-subtitle" data-aos="fade-up">Semua paket sudah termasuk revisi dan support. Harga dapat disesuaikan dengan kebutuhan Anda.</p>
             <div class="pricing-grid" data-aos="fade-up" data-aos-delay="100">
-                <!-- Starter -->
                 <div class="pricing-card">
                     <div class="pricing-header">
                         <h3>Starter</h3>
-                        <div class="price"> Mulai dari Rp 100K<span>/proyek</span></div>
+                        <div class="price">Mulai Rp 100K<span>/proyek</span></div>
                         <p>Cocok untuk kebutuhan dasar</p>
                     </div>
                     <ul class="pricing-features">
@@ -216,14 +245,13 @@
                         <li>❌ Domain & hosting</li>
                         <li>❌ After-sales support</li>
                     </ul>
-                    <button class="btn btn-outline wa-btn" data-service="Paket Starter (Rp 500K)">Pilih Paket Ini</button>
+                    <button class="btn btn-outline wa-btn" data-service="Paket Starter (Mulai Rp 100K)">Pilih Paket Ini</button>
                 </div>
-                <!-- Pro (Featured) -->
                 <div class="pricing-card featured">
                     <div class="pricing-badge">Terpopuler</div>
                     <div class="pricing-header">
                         <h3>Professional</h3>
-                        <div class="price"> Mulai dari Rp 1Jt<span>/proyek</span></div>
+                        <div class="price">Mulai Rp 1Jt<span>/proyek</span></div>
                         <p>Untuk bisnis yang serius</p>
                     </div>
                     <ul class="pricing-features">
@@ -234,9 +262,8 @@
                         <li>✅ After-sales support 7 hari</li>
                         <li>❌ Domain & hosting</li>
                     </ul>
-                    <button class="btn btn-primary wa-btn" data-service="Paket Professional (Rp 1.5Jt)">Pilih Paket Ini</button>
+                    <button class="btn btn-primary wa-btn" data-service="Paket Professional (Mulai Rp 1Jt)">Pilih Paket Ini</button>
                 </div>
-                <!-- Enterprise -->
                 <div class="pricing-card">
                     <div class="pricing-header">
                         <h3>Enterprise</h3>
@@ -391,49 +418,44 @@
                     <button id="next-btn" aria-label="Berikutnya">&#8594;</button>
                 </div>
             </div>
-        </div>
 
-
-        <!-- ===== FORM KOMENTAR ===== -->
-<div class="container">
-    <div class="review-form-wrapper" data-aos="fade-up">
-        <h3>✍️ Tulis Review Anda</h3>
-        <p>Bagikan pengalaman Anda bekerja sama dengan DigitalinLabs</p>
-        <div class="review-form">
-            <div class="form-group">
-                <label for="review-nama">Nama Anda *</label>
-                <input type="text" id="review-nama" placeholder="Contoh: Budi Santoso" maxlength="50">
-            </div>
-            <div class="form-group">
-                <label>Rating *</label>
-                <div class="star-rating">
-                    <span class="star" data-value="1">★</span>
-                    <span class="star" data-value="2">★</span>
-                    <span class="star" data-value="3">★</span>
-                    <span class="star" data-value="4">★</span>
-                    <span class="star" data-value="5">★</span>
+            <!-- ===== FORM REVIEW ===== -->
+            <div class="review-form-wrapper" data-aos="fade-up">
+                <h3>✍️ Tulis Review Anda</h3>
+                <p>Bagikan pengalaman Anda bekerja sama dengan DigitalinLabs</p>
+                <div class="review-form">
+                    <div class="form-group">
+                        <label for="review-nama">Nama Anda *</label>
+                        <input type="text" id="review-nama" placeholder="Contoh: Budi Santoso" maxlength="50">
+                    </div>
+                    <div class="form-group">
+                        <label>Rating *</label>
+                        <div class="star-rating">
+                            <span class="star" data-value="1">★</span>
+                            <span class="star" data-value="2">★</span>
+                            <span class="star" data-value="3">★</span>
+                            <span class="star" data-value="4">★</span>
+                            <span class="star" data-value="5">★</span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="review-pesan">Review Anda *</label>
+                        <textarea id="review-pesan" rows="3" placeholder="Ceritakan pengalaman Anda... (min. 10 karakter)" maxlength="500"></textarea>
+                        <small id="char-count">0/500 karakter</small>
+                    </div>
+                    <button class="btn btn-primary" id="submit-review">Kirim Review</button>
+                    <p id="review-status" class="review-status"></p>
                 </div>
             </div>
-            <div class="form-group">
-                <label for="review-pesan">Review Anda *</label>
-                <textarea id="review-pesan" rows="3" placeholder="Ceritakan pengalaman Anda... (min. 10 karakter)" maxlength="500"></textarea>
-                <small id="char-count">0/500 karakter</small>
+
+            <!-- Daftar komentar publik -->
+            <div class="public-reviews" data-aos="fade-up">
+                <h3>💬 Review dari Klien Kami</h3>
+                <div id="reviews-list">
+                    <p class="loading-reviews">Memuat review...</p>
+                </div>
             </div>
-            <button class="btn btn-primary" id="submit-review">Kirim Review</button>
-            <p id="review-status" class="review-status"></p>
         </div>
-    </div>
-
-    <!-- Daftar komentar publik -->
-    <div class="public-reviews" data-aos="fade-up">
-        <h3>💬 Review dari Klien Kami</h3>
-        <div id="reviews-list">
-            <p class="loading-reviews">Memuat review...</p>
-        </div>
-    </div>
-</div>
-
-
     </section>
 
     <!-- ===== FAQ ===== -->
@@ -464,7 +486,7 @@
                 </div>
                 <div class="faq-item">
                     <button class="faq-question">Apakah ada garansi setelah website selesai?</button>
-                    <div class="faq-answer"><p>Kami memberikan garansi bug-free selama 30 hari (Paket Professional) dan 90 hari (Paket Enterprise) setelah website diluncurkan. Selama periode tersebut, perbaikan bug dilakukan tanpa biaya tambahan.</p></div>
+                    <div class="faq-answer"><p>Kami memberikan garansi bug-free selama 7 hari setelah website diluncurkan. Selama periode tersebut, perbaikan bug dilakukan tanpa biaya tambahan.</p></div>
                 </div>
                 <div class="faq-item">
                     <button class="faq-question">Apakah bisa request fitur khusus di luar paket?</button>
@@ -482,21 +504,16 @@
             <p class="section-subtitle" data-aos="fade-up">Isi form di bawah atau langsung hubungi kami via WhatsApp. Tim kami siap merespons dalam 1×24 jam.</p>
             <div class="contact-wrapper">
                 <div class="contact-form-wrapper" data-aos="fade-right">
-                    <div class="contact-form" id="contact-form">
+                    <div id="contact-form">
                         <div class="form-group">
                             <label for="nama">Nama Lengkap *</label>
-                            <input type="text" id="nama" placeholder="Contoh: Budi Santoso" 
-                            maxlength="50" 
-                            minlength="2"
-                            required>
+                            <input type="text" id="nama" placeholder="Contoh: Budi Santoso"
+                                   maxlength="50" minlength="2" required>
                         </div>
                         <div class="form-group">
                             <label for="whatsapp">Nomor WhatsApp *</label>
-                            <input type="tel" id="whatsapp" placeholder="Contoh: 08123456789" 
-                            maxlength="15"
-       minlength="9"
-       pattern="[0-9+\-\s]+"
-       required>
+                            <input type="tel" id="whatsapp" placeholder="Contoh: 08123456789"
+                                   maxlength="15" minlength="9" pattern="[0-9+\-\s]+" required>
                         </div>
                         <div class="form-group">
                             <label for="layanan-select">Layanan yang Diminati *</label>
@@ -504,26 +521,24 @@
                                 <option value="">-- Pilih Layanan --</option>
                                 <option value="Jasa Pembuatan Website">🌐 Jasa Website</option>
                                 <option value="Jasa UI/UX Design">🎨 UI/UX Design</option>
-                                <option value="Jasa Laporan & Analitik">📊 Laporan & Analitik</option>
+                                <option value="Jasa Data Science">📊 Data Science</option>
                                 <option value="Jasa Desain Grafis">🖼️ Desain Grafis</option>
-                                <option value="Mentoring Profesional">🎓 Mentoring</option>
+                                <option value="Mentoring & Tugas Laporan">🎓 Mentoring & Laporan</option>
                                 <option value="Lainnya">💬 Lainnya / Custom</option>
                             </select>
                         </div>
                         <div class="form-group">
                             <label for="pesan">Detail Kebutuhan</label>
-                            <textarea id="pesan" rows="4" placeholder="Ceritakan kebutuhan atau pertanyaan Anda..." 
-                                maxlength="500"
-                                minlength="0">
-                            </textarea>
+                            <textarea id="pesan" rows="4"
+                                      placeholder="Ceritakan kebutuhan atau pertanyaan Anda..."
+                                      maxlength="500"></textarea>
                             <small class="char-counter" id="pesan-counter">0/500 karakter</small>
                         </div>
-<!-- Honeypot — jangan dihapus -->
-<div class="hp-field" aria-hidden="true">
-    <label for="hp-name">Jangan diisi</label>
-    <input type="text" id="hp-name" name="hp-name" tabindex="-1" autocomplete="off">
-</div>
-
+                        <!-- Honeypot — jangan dihapus -->
+                        <div class="hp-field" aria-hidden="true">
+                            <label for="hp-name">Jangan diisi</label>
+                            <input type="text" id="hp-name" name="hp-name" tabindex="-1" autocomplete="off">
+                        </div>
                         <button type="button" class="btn btn-primary btn-full" id="send-wa-btn">
                             💬 Kirim via WhatsApp
                         </button>
@@ -535,14 +550,14 @@
                         <span class="contact-icon">📱</span>
                         <div>
                             <strong>WhatsApp</strong>
-                            <a href="https://wa.me/6285285560661" target="_blank">+6285285560661</a>
+                            <a href="https://wa.me/6285285560661" target="_blank">+62 852-8556-0661</a>
                         </div>
                     </div>
                     <div class="contact-item">
                         <span class="contact-icon">📧</span>
                         <div>
                             <strong>Email</strong>
-                            <a href="mailto:hello@digitalinlabs.com">digitalinlabs.customercare@gmail.com</a>
+                            <a href="mailto:digitalinlabs.customercare@gmail.com">digitalinlabs.customercare@gmail.com</a>
                         </div>
                     </div>
                     <div class="contact-item">
@@ -580,21 +595,18 @@
             <p id="modal-service-name" class="modal-service-label"></p>
             <div class="form-group">
                 <label for="modal-nama">Nama Lengkap *</label>
-                <input type="text" id="modal-nama" placeholder="Nama Anda" maxlength="50"
-                minlength="2"
-                required>
-         
+                <input type="text" id="modal-nama" placeholder="Nama Anda"
+                       maxlength="50" minlength="2" required>
             </div>
             <div class="form-group">
                 <label for="modal-wa">Nomor WhatsApp *</label>
-                <input type="tel" id="modal-wa" placeholder="08123456789" maxlength="15"
-                minlength="9"
-                pattern="[0-9+\-\s]+"
-                required>
+                <input type="tel" id="modal-wa" placeholder="08123456789"
+                       maxlength="15" minlength="9" pattern="[0-9+\-\s]+" required>
             </div>
             <div class="form-group">
                 <label for="modal-detail">Detail Kebutuhan</label>
-                <textarea id="modal-detail" rows="3" placeholder="Ceritakan kebutuhan Anda..." maxlength="500"></textarea>
+                <textarea id="modal-detail" rows="3"
+                          placeholder="Ceritakan kebutuhan Anda..." maxlength="500"></textarea>
             </div>
             <button class="btn btn-primary btn-full" id="modal-send-btn">💬 Lanjut via WhatsApp</button>
         </div>
@@ -621,7 +633,7 @@
                     <ul>
                         <li><a href="#services">Jasa Website</a></li>
                         <li><a href="#services">UI/UX Design</a></li>
-                        <li><a href="#services">Laporan & Analitik</a></li>
+                        <li><a href="#services">Data Science</a></li>
                         <li><a href="#services">Desain Grafis</a></li>
                         <li><a href="#services">Mentoring</a></li>
                     </ul>
@@ -638,7 +650,7 @@
                 </div>
                 <div class="footer-contact">
                     <h4>Hubungi Kami</h4>
-                    <p>📱 +6285285560661</p>
+                    <p>📱 +62 852-8556-0661</p>
                     <p>📧 digitalinlabs.customercare@gmail.com</p>
                     <p>📍 Jakarta, Indonesia</p>
                 </div>
@@ -651,9 +663,9 @@
     </footer>
 
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"
-    integrity="sha384-wDjHoEQRAYXFNFjv8SjMCMEMq9rTLnmDHuMM8k4EVQM2SBZG3JsQhpCsMoN8y8j"
-    crossorigin="anonymous"
-    defer></script>
-    <script src="script.js"defer></script>
+            integrity="sha384-wDjHoEQRAYXFNFjv8SjMCMEMq9rTLnmDHuMM8k4EVQM2SBZG3JsQhpCsMoN8y8j"
+            crossorigin="anonymous"
+            defer></script>
+    <script src="script.js" defer></script>
 </body>
 </html>

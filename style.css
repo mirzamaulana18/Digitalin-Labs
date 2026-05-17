@@ -70,17 +70,6 @@ a {
     padding: 0 24px;
 }
 
-/* Logo normal di light mode */
-.logo-img {
-    height: 70px;
-    width: auto;
-    display: block;
-}
-
-/* Dark mode — background putih jadi transparan */
-[data-theme="dark"] .logo-img {
-    mix-blend-mode: screen;
-}
 /* =============================================
    NAVBAR
    ============================================= */
@@ -411,18 +400,35 @@ nav a:hover { background-color: var(--secondary-bg); color: var(--primary-color)
 .about-card {
     background: var(--card-bg);
     border-radius: var(--radius);
-    padding: 28px 20px;
+    padding: 28px 16px;
     text-align: center;
-    font-size: 0.9rem;
     font-weight: 600;
     box-shadow: var(--card-shadow);
     border: 1px solid var(--border-color);
-    line-height: 1.6;
-    font-size: 2rem;
+    line-height: 1.5;
     transition: var(--transition);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
 }
 
 .about-card:hover { transform: translateY(-4px); box-shadow: var(--card-shadow-hover); }
+
+.about-card .card-emoji {
+    font-size: 2rem;
+    line-height: 1;
+    display: block;
+}
+
+.about-card .card-label {
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: var(--text-color);
+    line-height: 1.4;
+    display: block;
+    word-break: break-word;
+}
 
 .ac-1 { background: linear-gradient(135deg, #dbeafe, #eff6ff); }
 .ac-2 { background: linear-gradient(135deg, #fce7f3, #fdf4ff); }
@@ -1154,169 +1160,6 @@ footer {
     .pricing-card.featured:hover { transform: translateY(-4px); }
 }
 
-
-/* ===== REVIEW FORM ===== */
-.review-form-wrapper {
-    background: var(--card-bg);
-    border-radius: var(--radius);
-    padding: 40px;
-    border: 1px solid var(--border-color);
-    box-shadow: var(--card-shadow);
-    max-width: 700px;
-    margin: 60px auto 0;
-    text-align: center;
-}
-
-.review-form-wrapper h3 {
-    font-size: 1.4rem;
-    font-weight: 700;
-    margin-bottom: 8px;
-}
-
-.review-form-wrapper > p {
-    color: var(--text-muted);
-    font-size: 0.9rem;
-    margin-bottom: 28px;
-}
-
-.review-form {
-    text-align: left;
-}
-
-/* Star Rating */
-.star-rating {
-    display: flex;
-    gap: 8px;
-    margin-top: 4px;
-}
-
-.star {
-    font-size: 2rem;
-    color: var(--border-color);
-    cursor: pointer;
-    transition: var(--transition);
-    line-height: 1;
-}
-
-.star.active,
-.star:hover {
-    color: #f59e0b;
-}
-
-/* Char count */
-#char-count {
-    display: block;
-    text-align: right;
-    font-size: 0.78rem;
-    color: var(--text-muted);
-    margin-top: 6px;
-}
-
-/* Status pesan */
-.review-status {
-    margin-top: 12px;
-    font-size: 0.88rem;
-    font-weight: 600;
-    text-align: center;
-    min-height: 20px;
-}
-
-.review-status.success { color: #10b981; }
-.review-status.error { color: #ef4444; }
-
-/* Public Reviews */
-.public-reviews {
-    max-width: 700px;
-    margin: 40px auto 0;
-}
-
-.public-reviews h3 {
-    font-size: 1.3rem;
-    font-weight: 700;
-    margin-bottom: 24px;
-    text-align: center;
-}
-
-.review-card {
-    background: var(--card-bg);
-    border-radius: var(--radius);
-    padding: 24px;
-    border: 1px solid var(--border-color);
-    box-shadow: var(--card-shadow);
-    margin-bottom: 16px;
-}
-
-.review-card-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 10px;
-}
-
-.review-card-header strong {
-    font-size: 0.95rem;
-}
-
-.review-card-stars {
-    color: #f59e0b;
-    font-size: 0.95rem;
-}
-
-.review-card p {
-    font-size: 0.88rem;
-    color: var(--text-muted);
-    line-height: 1.7;
-    margin-bottom: 8px;
-}
-
-.review-card-date {
-    font-size: 0.75rem;
-    color: var(--text-muted);
-}
-
-.loading-reviews {
-    text-align: center;
-    color: var(--text-muted);
-    font-size: 0.9rem;
-    padding: 20px 0;
-}
-
-.no-reviews {
-    text-align: center;
-    color: var(--text-muted);
-    font-size: 0.9rem;
-    padding: 20px 0;
-}
-
-
-/* Honeypot — disembunyikan dari manusia */
-.hp-field {
-    opacity: 0;
-    position: absolute;
-    top: 0;
-    left: 0;
-    height: 0;
-    width: 0;
-    z-index: -1;
-    overflow: hidden;
-    pointer-events: none;
-}
-
-
-/* Character counter */
-.char-counter {
-    display: block;
-    text-align: right;
-    font-size: 0.75rem;
-    color: var(--text-muted);
-    margin-top: 4px;
-    transition: var(--transition);
-}
-
-.char-counter.warning { color: #f59e0b; }
-.char-counter.danger { color: #ef4444; }
-
-
 /* =============================================
    RESPONSIVE — Mobile
    ============================================= */
@@ -1353,6 +1196,10 @@ footer {
     /* Layouts */
     .about-wrapper { grid-template-columns: 1fr; gap: 40px; }
     .about-visual { order: -1; }
+    .about-card-stack { grid-template-columns: 1fr 1fr; gap: 12px; }
+    .about-card { padding: 20px 10px; }
+    .about-card .card-emoji { font-size: 1.6rem; }
+    .about-card .card-label { font-size: 0.75rem; }
     .services-grid { grid-template-columns: 1fr; }
     .portfolio-grid { grid-template-columns: repeat(2, 1fr); }
     .contact-wrapper { grid-template-columns: 1fr; }
@@ -1371,5 +1218,6 @@ footer {
     .footer-brand { grid-column: span 1; }
     .hero-stats { flex-direction: column; gap: 16px; }
     .stat-divider { width: 60px; height: 1px; }
+    .about-card-stack { grid-template-columns: 1fr 1fr; }
+    .about-card .card-label { font-size: 0.7rem; }
 }
-

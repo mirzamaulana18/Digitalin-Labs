@@ -1,26 +1,34 @@
 /* =============================================
-   DigitalinLabs — Enhanced JavaScript
+   DigitalinLabs — Fixed & Enhanced JavaScript
+   =============================================
+   BUG FIXES:
+   1. backToTopBtn dideklarasikan lebih awal
+   2. Honeypot check dipindah ke dalam event listener (bukan top-level)
+   3. Hapus duplicate event listener send-wa-btn
+   4. WA_NUMBER diupdate ke nomor yang benar
    ============================================= */
 
-// ===== 1. AOS (Scroll Animation) =====
+// ===== 1. Deklarasi elemen penting di awal =====
+const backToTopBtn = document.getElementById('back-to-top');
+const navbar = document.getElementById('navbar');
+
+// ===== 2. AOS (Scroll Animation) =====
 AOS.init({
     once: true,
     offset: 80,
     duration: 700,
 });
 
-// ===== 2. Footer Year =====
+// ===== 3. Footer Year =====
 document.getElementById('footer-year').textContent = new Date().getFullYear();
 
-// ===== 3. Sticky Navbar Shrink =====
-const navbar = document.getElementById('navbar');
+// ===== 4. Sticky Navbar + Back to Top Visibility =====
 window.addEventListener('scroll', () => {
     navbar.classList.toggle('scrolled', window.scrollY > 60);
-    // Back to top visibility
     backToTopBtn.classList.toggle('visible', window.scrollY > 400);
 });
 
-// ===== 4. Dark / Light Mode Toggle =====
+// ===== 5. Dark / Light Mode Toggle =====
 const themeToggle = document.getElementById('theme-toggle');
 const savedTheme = localStorage.getItem('theme') || 'light';
 
@@ -37,7 +45,7 @@ themeToggle.addEventListener('click', () => {
     applyTheme(current === 'dark' ? 'light' : 'dark');
 });
 
-// ===== 5. Mobile Hamburger Menu =====
+// ===== 6. Mobile Hamburger Menu =====
 const hamburger = document.getElementById('hamburger');
 const navMenu = document.getElementById('nav-menu');
 
@@ -47,7 +55,6 @@ hamburger.addEventListener('click', () => {
     hamburger.setAttribute('aria-expanded', isOpen);
 });
 
-// Close menu on nav link click
 navMenu.querySelectorAll('a').forEach(link => {
     link.addEventListener('click', () => {
         navMenu.classList.remove('open');
@@ -56,29 +63,30 @@ navMenu.querySelectorAll('a').forEach(link => {
     });
 });
 
-// ===== 6. FAQ Accordion =====
+// ===== 7. FAQ Accordion =====
 document.querySelectorAll('.faq-question').forEach(question => {
     question.addEventListener('click', () => {
         const isActive = question.classList.contains('active');
-        // Close all
         document.querySelectorAll('.faq-question').forEach(q => q.classList.remove('active'));
-        // Open clicked (unless it was already open)
         if (!isActive) question.classList.add('active');
     });
 });
 
-// ===== 7. WhatsApp Number — ganti dengan nomor Anda =====
-const WA_NUMBER = '6281234567890'; // Format: 62 + nomor tanpa 0 depan
+// ===== 8. WhatsApp Number =====
+const WA_NUMBER = '6285285560661';
 
 function buildWaLink(service, nama, detail) {
-    let msg = `Halo DigitalinLabs! 👋\n\nSaya tertarik dengan *${service}*.\n`;
-    if (nama) msg += `\nNama saya: *${nama}*`;
-    if (detail) msg += `\nDetail kebutuhan: ${detail}`;
+    const cleanService = sanitizeInput(service);
+    const cleanNama = sanitizeInput(nama);
+    const cleanDetail = sanitizeInput(detail || '');
+    let msg = `Halo DigitalinLabs! 👋\n\nSaya tertarik dengan *${cleanService}*.\n`;
+    if (cleanNama) msg += `\nNama saya: *${cleanNama}*`;
+    if (cleanDetail) msg += `\nDetail kebutuhan: ${cleanDetail}`;
     msg += `\n\nMohon informasi lebih lanjut. Terima kasih! 🙏`;
     return `https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(msg)}`;
 }
 
-// ===== 8. Order Modal =====
+// ===== 9. Order Modal =====
 const modal = document.getElementById('order-modal');
 const modalClose = document.getElementById('modal-close');
 const modalSendBtn = document.getElementById('modal-send-btn');
@@ -93,7 +101,7 @@ function openModal(serviceName) {
     document.getElementById('modal-detail').value = '';
     modal.classList.add('active');
     document.body.style.overflow = 'hidden';
-    document.getElementById('modal-nama').focus();
+    setTimeout(() => document.getElementById('modal-nama').focus(), 100);
 }
 
 function closeModal() {
@@ -101,7 +109,6 @@ function closeModal() {
     document.body.style.overflow = '';
 }
 
-// Attach order modal to all .wa-btn buttons
 document.querySelectorAll('.wa-btn').forEach(btn => {
     btn.addEventListener('click', () => {
         openModal(btn.dataset.service || 'Layanan DigitalinLabs');
@@ -109,55 +116,19 @@ document.querySelectorAll('.wa-btn').forEach(btn => {
 });
 
 modalClose.addEventListener('click', closeModal);
-
-modal.addEventListener('click', (e) => {
-    if (e.target === modal) closeModal();
-});
-
-document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape') closeModal();
-});
+modal.addEventListener('click', (e) => { if (e.target === modal) closeModal(); });
+document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeModal(); });
 
 modalSendBtn.addEventListener('click', () => {
     const nama = document.getElementById('modal-nama').value.trim();
     const wa = document.getElementById('modal-wa').value.trim();
     const detail = document.getElementById('modal-detail').value.trim();
 
-    if (!nama) {
-        alert('Mohon isi nama lengkap Anda.');
-        document.getElementById('modal-nama').focus();
-        return;
-    }
-    if (!wa) {
-        alert('Mohon isi nomor WhatsApp Anda.');
-        document.getElementById('modal-wa').focus();
-        return;
-    }
+    if (!nama) { alert('Mohon isi nama lengkap Anda.'); document.getElementById('modal-nama').focus(); return; }
+    if (!validatePhone(wa)) { alert('Format nomor WhatsApp tidak valid.'); document.getElementById('modal-wa').focus(); return; }
 
     window.open(buildWaLink(currentService, nama, detail), '_blank');
     closeModal();
-});
-
-// ===== 9. Contact Form — Send via WA =====
-// Cek honeypot
-const honeypot = document.getElementById('hp-name').value;
-if (honeypot !== '') {
-    // Pura-pura berhasil agar bot tidak tahu diblokir
-    showFormError('✅ Pesan berhasil dikirim!');
-    return;
-}
-
-document.getElementById('send-wa-btn').addEventListener('click', () => {
-    const nama = document.getElementById('nama').value.trim();
-    const wa = document.getElementById('whatsapp').value.trim();
-    const layanan = document.getElementById('layanan-select').value;
-    const pesan = document.getElementById('pesan').value.trim();
-
-    if (!nama) { alert('Mohon isi nama lengkap Anda.'); document.getElementById('nama').focus(); return; }
-    if (!wa) { alert('Mohon isi nomor WhatsApp Anda.'); document.getElementById('whatsapp').focus(); return; }
-    if (!layanan) { alert('Mohon pilih layanan yang diminati.'); document.getElementById('layanan-select').focus(); return; }
-
-    window.open(buildWaLink(layanan, nama, pesan || 'Ingin konsultasi lebih lanjut.'), '_blank');
 });
 
 // ===== 10. Testimonials Slider =====
@@ -167,7 +138,6 @@ const cards = track.querySelectorAll('.testimonial-card');
 let currentSlide = 0;
 let autoSlideTimer;
 
-// Build dots
 cards.forEach((_, i) => {
     const dot = document.createElement('div');
     dot.className = 'dot' + (i === 0 ? ' active' : '');
@@ -204,7 +174,6 @@ function resetAutoSlide() {
 
 startAutoSlide();
 
-// Touch/swipe support for slider
 let touchStartX = 0;
 track.addEventListener('touchstart', e => { touchStartX = e.touches[0].clientX; }, { passive: true });
 track.addEventListener('touchend', e => {
@@ -220,7 +189,6 @@ filterBtns.forEach(btn => {
     btn.addEventListener('click', () => {
         filterBtns.forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
-
         const filter = btn.dataset.filter;
         portfolioItems.forEach(item => {
             const match = filter === 'all' || item.dataset.category === filter;
@@ -230,16 +198,15 @@ filterBtns.forEach(btn => {
 });
 
 // ===== 12. Back to Top =====
-const backToTopBtn = document.getElementById('back-to-top');
 backToTopBtn.addEventListener('click', () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
 });
 
-// ===== 13. Smooth active nav highlight =====
+// ===== 13. Active Nav Highlight =====
 const sections = document.querySelectorAll('section[id]');
 const navLinks = document.querySelectorAll('#nav-menu a[href^="#"]');
 
-const observer = new IntersectionObserver((entries) => {
+const sectionObserver = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
         if (entry.isIntersecting) {
             navLinks.forEach(link => {
@@ -252,104 +219,77 @@ const observer = new IntersectionObserver((entries) => {
     });
 }, { threshold: 0.4, rootMargin: '-80px 0px 0px 0px' });
 
-sections.forEach(s => observer.observe(s));
-
+sections.forEach(s => sectionObserver.observe(s));
 
 // ============================================
-// SECURITY MAKSIMAL — FORM ORDER
+// SECURITY — FUNGSI KEAMANAN
 // ============================================
 
-// Rate limiting
-let lastOrderTime = 0;
-let orderAttempts = 0;
-const ORDER_COOLDOWN = 30000;    // 30 detik antar kiriman
-const MAX_ATTEMPTS = 5;          // Maksimal 5x percobaan
-const BLOCK_DURATION = 300000;   // Diblokir 5 menit kalau melebihi
-
-let blockedUntil = 0;
-
-// ---- Sanitasi Input ----
 function sanitizeInput(text) {
     if (!text) return '';
     return text
-        // Hapus karakter zero-width (sering dipakai Virtex)
         .replace(/[\u200B-\u200D\uFEFF\u00AD\u034F\u2060\u2800]/g, '')
-        // Hapus karakter kontrol berbahaya
         .replace(/[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]/g, '')
-        // Batasi emoji berturutan (max 3)
-        .replace(/([\uD800-\uDBFF][\uDC00-\uDFFF]|\p{Emoji}){4,}/gu, '...')
-        // Hapus karakter Arab/RTL berlebihan (Virtex)
         .replace(/[\u0600-\u06FF\u0750-\u077F]{10,}/g, '')
-        // Hapus URL
         .replace(/https?:\/\/[^\s]*/gi, '[link dihapus]')
-        // Hapus karakter XSS
         .replace(/[<>\"\'`;]/g, '')
-        // Hapus newline berlebihan
         .replace(/[\r\n]{3,}/g, '\n\n')
-        // Hapus spasi berlebihan
         .replace(/\s{5,}/g, ' ')
-        // Hapus karakter berulang berlebihan (aaaaaa / !!!!!!)
         .replace(/(.)\1{9,}/g, '$1$1$1')
         .trim();
 }
 
-// ---- Validasi Nama ----
 function validateName(name) {
     if (!name || name.length < 2 || name.length > 50) return false;
-    // Hanya huruf, spasi, titik, koma, apostrof
     return /^[a-zA-Z\s\.,'\-]+$/.test(name);
 }
 
-// ---- Validasi Nomor WA ----
 function validatePhone(phone) {
+    if (!phone) return false;
     const cleaned = phone.replace(/[\s\-\(\)]/g, '');
     return /^(\+62|62|0)[0-9]{8,13}$/.test(cleaned);
 }
 
-// ---- Deteksi Virtex & Karakter Berbahaya ----
 function detectVirtex(text) {
+    if (!text) return false;
     const checks = [
-        // Karakter Arab berlebihan (Virtex klasik)
         /[\u0600-\u06FF]{5,}/,
-        // Karakter Zalgo (teks berantakan)
         /[\u0300-\u036F]{3,}/,
-        // Karakter invisible/zero-width
         /[\u200B-\u200F\u2028-\u202F]/,
-        // Emoji berlebihan
         /([\uD800-\uDBFF][\uDC00-\uDFFF]){5,}/,
-        // Karakter berulang ekstrem
         /(.)\1{15,}/,
-        // Script injection
         /<script|javascript:|on\w+\s*=|eval\(|alert\(|document\.|window\./gi,
-        // SQL injection
-        /('|--|;|DROP|SELECT|INSERT|UPDATE|DELETE|UNION|WHERE)\s/gi,
+        /('|--|;|DROP\s|SELECT\s|INSERT\s|UPDATE\s|DELETE\s|UNION\s|WHERE\s)/gi,
     ];
     return checks.some(pattern => pattern.test(text));
 }
 
-// ---- Cek Panjang Total Pesan ----
-function checkTotalLength(nama, wa, pesan) {
-    const total = (nama + wa + pesan).length;
-    return total <= 1000; // Maksimal 1000 karakter total
+function escapeHtml(text) {
+    const div = document.createElement('div');
+    div.appendChild(document.createTextNode(text));
+    return div.innerHTML;
 }
 
-// ---- Tampilkan Error di Form ----
 function showFormError(message) {
-    // Hapus error lama kalau ada
     const existing = document.querySelector('.form-error-msg');
     if (existing) existing.remove();
-
     const errDiv = document.createElement('p');
     errDiv.className = 'form-error-msg';
     errDiv.style.cssText = 'color:#ef4444;font-size:0.85rem;font-weight:600;margin-top:10px;text-align:center;';
     errDiv.textContent = message;
-
     const btn = document.getElementById('send-wa-btn');
     btn.insertAdjacentElement('afterend', errDiv);
-    setTimeout(() => errDiv.remove(), 4000);
+    setTimeout(() => { if (errDiv.parentNode) errDiv.remove(); }, 4000);
 }
 
-// ---- Event Listener Form Order ----
+// ===== 14. Contact Form — dengan semua security =====
+let lastOrderTime = 0;
+let orderAttempts = 0;
+const ORDER_COOLDOWN = 30000;
+const MAX_ATTEMPTS = 5;
+const BLOCK_DURATION = 300000;
+let blockedUntil = 0;
+
 document.getElementById('send-wa-btn').addEventListener('click', () => {
     const nama = document.getElementById('nama').value.trim();
     const wa = document.getElementById('whatsapp').value.trim();
@@ -357,7 +297,14 @@ document.getElementById('send-wa-btn').addEventListener('click', () => {
     const pesan = document.getElementById('pesan').value.trim();
     const now = Date.now();
 
-    // Cek apakah sedang diblokir
+    // ✅ Cek honeypot — HARUS di dalam event listener, bukan di luar
+    const honeypot = document.getElementById('hp-name').value;
+    if (honeypot !== '') {
+        showFormError('✅ Pesan berhasil dikirim!'); // Pura-pura sukses
+        return;
+    }
+
+    // Cek blokir
     if (now < blockedUntil) {
         const menitSisa = Math.ceil((blockedUntil - now) / 60000);
         showFormError(`🚫 Terlalu banyak percobaan. Coba lagi dalam ${menitSisa} menit.`);
@@ -380,78 +327,65 @@ document.getElementById('send-wa-btn').addEventListener('click', () => {
         return;
     }
 
-    // Validasi nama
+    // Validasi
     if (!nama) { showFormError('⚠️ Mohon isi nama lengkap Anda.'); return; }
-    if (!validateName(nama)) {
-        showFormError('⚠️ Nama hanya boleh berisi huruf dan spasi.'); return;
-    }
-
-    // Validasi WA
-    if (!wa) { showFormError('⚠️ Mohon isi nomor WhatsApp Anda.'); return; }
-    if (!validatePhone(wa)) {
-        showFormError('⚠️ Format nomor WhatsApp tidak valid. Contoh: 08123456789'); return;
-    }
-
-    // Validasi layanan
+    if (!validateName(nama)) { showFormError('⚠️ Nama hanya boleh berisi huruf dan spasi.'); return; }
+    if (!validatePhone(wa)) { showFormError('⚠️ Format nomor WhatsApp tidak valid. Contoh: 08123456789'); return; }
     if (!layanan) { showFormError('⚠️ Mohon pilih layanan yang diminati.'); return; }
+    if ((nama + wa + pesan).length > 1000) { showFormError('⚠️ Input terlalu panjang.'); return; }
 
-    // Cek panjang total
-    if (!checkTotalLength(nama, wa, pesan)) {
-        showFormError('⚠️ Input terlalu panjang.'); return;
-    }
-
-    // Deteksi Virtex & karakter berbahaya
+    // Deteksi Virtex
     if (detectVirtex(nama) || detectVirtex(pesan)) {
         showFormError('⚠️ Input mengandung karakter yang tidak diizinkan.');
-        // Blokir langsung kalau ada Virtex
         blockedUntil = now + BLOCK_DURATION;
         return;
     }
 
-    // Semua aman — sanitasi dan kirim
-    const cleanNama = sanitizeInput(nama);
-    const cleanPesan = sanitizeInput(pesan);
-
-    // Reset percobaan kalau berhasil
+    // Sukses — reset counter
     orderAttempts = 0;
     lastOrderTime = Date.now();
 
-    window.open(buildWaLink(layanan, cleanNama, cleanPesan || 'Ingin konsultasi lebih lanjut.'), '_blank');
+    window.open(buildWaLink(layanan, nama, pesan || 'Ingin konsultasi lebih lanjut.'), '_blank');
 });
 
-
-// Character counter form kontak
+// ===== 15. Character Counter =====
 const pesanInput = document.getElementById('pesan');
 const pesanCounter = document.getElementById('pesan-counter');
 
-pesanInput.addEventListener('input', function() {
+pesanInput.addEventListener('input', function () {
     const length = this.value.length;
     pesanCounter.textContent = `${length}/500 karakter`;
-    
     pesanCounter.classList.remove('warning', 'danger');
     if (length >= 400) pesanCounter.classList.add('danger');
     else if (length >= 300) pesanCounter.classList.add('warning');
 });
 
-
-
-// ===== SUPABASE KOMENTAR =====
+// ============================================
+// SUPABASE — REVIEW / KOMENTAR
+// ============================================
 const SUPABASE_URL = 'https://mmbyfihyirhfwqwiqvvi.supabase.co';
 const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1tYnlmaWh5aXJoZndxd2lxdnZpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg5NTgwODAsImV4cCI6MjA5NDUzNDA4MH0.6g0_nuPTew3sIJkaQ5yP_Ip45NYcB-uF3coBAL6cQQk';
 
-// Ambil semua review dari Supabase
 async function loadReviews() {
     const reviewsList = document.getElementById('reviews-list');
+    if (!reviewsList) return;
+
     try {
+        reviewsList.innerHTML = '<p class="loading-reviews">Memuat review...</p>';
+
         const res = await fetch(`${SUPABASE_URL}/rest/v1/komentar?order=created_at.desc&limit=20`, {
             headers: {
                 'apikey': SUPABASE_KEY,
-                'Authorization': `Bearer ${SUPABASE_KEY}`
+                'Authorization': `Bearer ${SUPABASE_KEY}`,
+                'Content-Type': 'application/json'
             }
         });
+
+        if (!res.ok) throw new Error(`HTTP error: ${res.status}`);
+
         const data = await res.json();
 
-        if (!data || data.length === 0) {
+        if (!Array.isArray(data) || data.length === 0) {
             reviewsList.innerHTML = '<p class="no-reviews">Belum ada review. Jadilah yang pertama! 😊</p>';
             return;
         }
@@ -459,37 +393,34 @@ async function loadReviews() {
         reviewsList.innerHTML = data.map(review => `
             <div class="review-card">
                 <div class="review-card-header">
-                    <strong>${escapeHtml(review.nama)}</strong>
-                    <span class="review-card-stars">${'★'.repeat(review.rating)}${'☆'.repeat(5 - review.rating)}</span>
+                    <strong>${escapeHtml(review.nama || 'Anonim')}</strong>
+                    <span class="review-card-stars">${'★'.repeat(Number(review.rating) || 5)}${'☆'.repeat(5 - (Number(review.rating) || 5))}</span>
                 </div>
-                <p>${escapeHtml(review.pesan)}</p>
+                <p>${escapeHtml(review.pesan || '')}</p>
                 <span class="review-card-date">${formatTanggal(review.created_at)}</span>
             </div>
         `).join('');
+
     } catch (err) {
+        console.error('Review load error:', err);
         reviewsList.innerHTML = '<p class="no-reviews">Gagal memuat review. Coba refresh halaman.</p>';
     }
 }
 
-// Kirim review baru ke Supabase
 async function submitReview() {
     const nama = document.getElementById('review-nama').value.trim();
     const pesan = document.getElementById('review-pesan').value.trim();
-    const status = document.getElementById('review-status');
     const btn = document.getElementById('submit-review');
 
     // Validasi
-    if (!nama || nama.length < 2) {
-        showStatus('⚠️ Nama minimal 2 karakter.', 'error'); return;
-    }
-    if (selectedRating === 0) {
-        showStatus('⚠️ Pilih rating bintang dulu.', 'error'); return;
-    }
-    if (!pesan || pesan.length < 10) {
-        showStatus('⚠️ Review minimal 10 karakter.', 'error'); return;
-    }
+    if (!nama || nama.length < 2) { showStatus('⚠️ Nama minimal 2 karakter.', 'error'); return; }
+    if (selectedRating === 0) { showStatus('⚠️ Pilih rating bintang dulu.', 'error'); return; }
+    if (!pesan || pesan.length < 10) { showStatus('⚠️ Review minimal 10 karakter.', 'error'); return; }
+    if (detectVirtex(nama) || detectVirtex(pesan)) { showStatus('⚠️ Input mengandung karakter tidak diizinkan.', 'error'); return; }
 
-    // Loading state
+    const cleanNama = sanitizeInput(nama);
+    const cleanPesan = sanitizeInput(pesan);
+
     btn.disabled = true;
     btn.textContent = 'Mengirim...';
 
@@ -502,22 +433,24 @@ async function submitReview() {
                 'Content-Type': 'application/json',
                 'Prefer': 'return=minimal'
             },
-            body: JSON.stringify({ nama, pesan, rating: selectedRating })
+            body: JSON.stringify({ nama: cleanNama, pesan: cleanPesan, rating: selectedRating })
         });
 
-        if (res.ok) {
+        if (res.ok || res.status === 201) {
             showStatus('✅ Review berhasil dikirim! Terima kasih 🙏', 'success');
-            // Reset form
             document.getElementById('review-nama').value = '';
             document.getElementById('review-pesan').value = '';
             document.getElementById('char-count').textContent = '0/500 karakter';
             selectedRating = 0;
             document.querySelectorAll('.star').forEach(s => s.classList.remove('active'));
-            loadReviews(); // Refresh daftar review
+            await loadReviews();
         } else {
+            const errText = await res.text();
+            console.error('Submit error:', res.status, errText);
             showStatus('❌ Gagal mengirim. Coba lagi.', 'error');
         }
     } catch (err) {
+        console.error('Submit exception:', err);
         showStatus('❌ Koneksi bermasalah. Coba lagi.', 'error');
     }
 
@@ -525,53 +458,51 @@ async function submitReview() {
     btn.textContent = 'Kirim Review';
 }
 
-// Helper functions
 function showStatus(msg, type) {
     const status = document.getElementById('review-status');
+    if (!status) return;
     status.textContent = msg;
     status.className = 'review-status ' + type;
-    setTimeout(() => { status.textContent = ''; status.className = 'review-status'; }, 4000);
-}
-
-function escapeHtml(text) {
-    return text.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+    setTimeout(() => { status.textContent = ''; status.className = 'review-status'; }, 5000);
 }
 
 function formatTanggal(dateStr) {
+    if (!dateStr) return '';
     return new Date(dateStr).toLocaleDateString('id-ID', {
         day: 'numeric', month: 'long', year: 'numeric'
     });
 }
 
-// Star rating interaction
+// Star rating
 let selectedRating = 0;
 document.querySelectorAll('.star').forEach(star => {
-    star.addEventListener('mouseover', function() {
+    star.addEventListener('mouseover', function () {
         const val = parseInt(this.dataset.value);
-        document.querySelectorAll('.star').forEach((s, i) => {
-            s.classList.toggle('active', i < val);
-        });
+        document.querySelectorAll('.star').forEach((s, i) => s.classList.toggle('active', i < val));
     });
-    star.addEventListener('mouseout', function() {
-        document.querySelectorAll('.star').forEach((s, i) => {
-            s.classList.toggle('active', i < selectedRating);
-        });
+    star.addEventListener('mouseout', function () {
+        document.querySelectorAll('.star').forEach((s, i) => s.classList.toggle('active', i < selectedRating));
     });
-    star.addEventListener('click', function() {
+    star.addEventListener('click', function () {
         selectedRating = parseInt(this.dataset.value);
-        document.querySelectorAll('.star').forEach((s, i) => {
-            s.classList.toggle('active', i < selectedRating);
-        });
+        document.querySelectorAll('.star').forEach((s, i) => s.classList.toggle('active', i < selectedRating));
     });
 });
 
-// Char counter
-document.getElementById('review-pesan').addEventListener('input', function() {
-    document.getElementById('char-count').textContent = `${this.value.length}/500 karakter`;
-});
+// Char counter review
+const reviewPesanInput = document.getElementById('review-pesan');
+if (reviewPesanInput) {
+    reviewPesanInput.addEventListener('input', function () {
+        const charCount = document.getElementById('char-count');
+        if (charCount) charCount.textContent = `${this.value.length}/500 karakter`;
+    });
+}
 
-// Submit button
-document.getElementById('submit-review').addEventListener('click', submitReview);
+// Submit review
+const submitReviewBtn = document.getElementById('submit-review');
+if (submitReviewBtn) {
+    submitReviewBtn.addEventListener('click', submitReview);
+}
 
 // Load reviews saat halaman dibuka
 loadReviews();
