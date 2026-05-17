@@ -1288,6 +1288,35 @@ footer {
     padding: 20px 0;
 }
 
+
+/* Honeypot — disembunyikan dari manusia */
+.hp-field {
+    opacity: 0;
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 0;
+    width: 0;
+    z-index: -1;
+    overflow: hidden;
+    pointer-events: none;
+}
+
+
+/* Character counter */
+.char-counter {
+    display: block;
+    text-align: right;
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    margin-top: 4px;
+    transition: var(--transition);
+}
+
+.char-counter.warning { color: #f59e0b; }
+.char-counter.danger { color: #ef4444; }
+
+
 /* =============================================
    RESPONSIVE — Mobile
    ============================================= */

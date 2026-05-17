@@ -17,7 +17,10 @@
     <title>DigitalinLabs | Jasa Digital Kreatif</title>
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" 
+      rel="stylesheet"
+      integrity="sha384-0UIoOAsgfgYLOtB5f9T4CpckNBSaRCHVpBH6BaJJMXbLpH9Bk0Kf3FBqhiepJl5"
+      crossorigin="anonymous">
 
     <!-- Open Graph (Facebook, WhatsApp, LinkedIn) -->
 <meta property="og:type" content="website">
@@ -482,11 +485,18 @@
                     <div class="contact-form" id="contact-form">
                         <div class="form-group">
                             <label for="nama">Nama Lengkap *</label>
-                            <input type="text" id="nama" placeholder="Contoh: Budi Santoso" required>
+                            <input type="text" id="nama" placeholder="Contoh: Budi Santoso" 
+                            maxlength="50" 
+                            minlength="2"
+                            required>
                         </div>
                         <div class="form-group">
                             <label for="whatsapp">Nomor WhatsApp *</label>
-                            <input type="tel" id="whatsapp" placeholder="Contoh: 08123456789" required>
+                            <input type="tel" id="whatsapp" placeholder="Contoh: 08123456789" 
+                            maxlength="15"
+       minlength="9"
+       pattern="[0-9+\-\s]+"
+       required>
                         </div>
                         <div class="form-group">
                             <label for="layanan-select">Layanan yang Diminati *</label>
@@ -502,8 +512,18 @@
                         </div>
                         <div class="form-group">
                             <label for="pesan">Detail Kebutuhan</label>
-                            <textarea id="pesan" rows="4" placeholder="Ceritakan kebutuhan atau pertanyaan Anda..."></textarea>
+                            <textarea id="pesan" rows="4" placeholder="Ceritakan kebutuhan atau pertanyaan Anda..." 
+                                maxlength="500"
+                                minlength="0">
+                            </textarea>
+                            <small class="char-counter" id="pesan-counter">0/500 karakter</small>
                         </div>
+<!-- Honeypot — jangan dihapus -->
+<div class="hp-field" aria-hidden="true">
+    <label for="hp-name">Jangan diisi</label>
+    <input type="text" id="hp-name" name="hp-name" tabindex="-1" autocomplete="off">
+</div>
+
                         <button type="button" class="btn btn-primary btn-full" id="send-wa-btn">
                             💬 Kirim via WhatsApp
                         </button>
@@ -560,15 +580,21 @@
             <p id="modal-service-name" class="modal-service-label"></p>
             <div class="form-group">
                 <label for="modal-nama">Nama Lengkap *</label>
-                <input type="text" id="modal-nama" placeholder="Nama Anda" required>
+                <input type="text" id="modal-nama" placeholder="Nama Anda" maxlength="50"
+                minlength="2"
+                required>
+         
             </div>
             <div class="form-group">
                 <label for="modal-wa">Nomor WhatsApp *</label>
-                <input type="tel" id="modal-wa" placeholder="08123456789" required>
+                <input type="tel" id="modal-wa" placeholder="08123456789" maxlength="15"
+                minlength="9"
+                pattern="[0-9+\-\s]+"
+                required>
             </div>
             <div class="form-group">
                 <label for="modal-detail">Detail Kebutuhan</label>
-                <textarea id="modal-detail" rows="3" placeholder="Ceritakan kebutuhan Anda..."></textarea>
+                <textarea id="modal-detail" rows="3" placeholder="Ceritakan kebutuhan Anda..." maxlength="500"></textarea>
             </div>
             <button class="btn btn-primary btn-full" id="modal-send-btn">💬 Lanjut via WhatsApp</button>
         </div>
@@ -624,7 +650,10 @@
         </div>
     </footer>
 
-    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"
+    integrity="sha384-wDjHoEQRAYXFNFjv8SjMCMEMq9rTLnmDHuMM8k4EVQM2SBZG3JsQhpCsMoN8y8j"
+    crossorigin="anonymous"
+    defer></script>
     <script src="script.js"></script>
 </body>
 </html>

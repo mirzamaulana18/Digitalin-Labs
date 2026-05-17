@@ -139,6 +139,14 @@ modalSendBtn.addEventListener('click', () => {
 });
 
 // ===== 9. Contact Form — Send via WA =====
+// Cek honeypot
+const honeypot = document.getElementById('hp-name').value;
+if (honeypot !== '') {
+    // Pura-pura berhasil agar bot tidak tahu diblokir
+    showFormError('✅ Pesan berhasil dikirim!');
+    return;
+}
+
 document.getElementById('send-wa-btn').addEventListener('click', () => {
     const nama = document.getElementById('nama').value.trim();
     const wa = document.getElementById('whatsapp').value.trim();
@@ -245,6 +253,186 @@ const observer = new IntersectionObserver((entries) => {
 }, { threshold: 0.4, rootMargin: '-80px 0px 0px 0px' });
 
 sections.forEach(s => observer.observe(s));
+
+
+// ============================================
+// SECURITY MAKSIMAL — FORM ORDER
+// ============================================
+
+// Rate limiting
+let lastOrderTime = 0;
+let orderAttempts = 0;
+const ORDER_COOLDOWN = 30000;    // 30 detik antar kiriman
+const MAX_ATTEMPTS = 5;          // Maksimal 5x percobaan
+const BLOCK_DURATION = 300000;   // Diblokir 5 menit kalau melebihi
+
+let blockedUntil = 0;
+
+// ---- Sanitasi Input ----
+function sanitizeInput(text) {
+    if (!text) return '';
+    return text
+        // Hapus karakter zero-width (sering dipakai Virtex)
+        .replace(/[\u200B-\u200D\uFEFF\u00AD\u034F\u2060\u2800]/g, '')
+        // Hapus karakter kontrol berbahaya
+        .replace(/[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]/g, '')
+        // Batasi emoji berturutan (max 3)
+        .replace(/([\uD800-\uDBFF][\uDC00-\uDFFF]|\p{Emoji}){4,}/gu, '...')
+        // Hapus karakter Arab/RTL berlebihan (Virtex)
+        .replace(/[\u0600-\u06FF\u0750-\u077F]{10,}/g, '')
+        // Hapus URL
+        .replace(/https?:\/\/[^\s]*/gi, '[link dihapus]')
+        // Hapus karakter XSS
+        .replace(/[<>\"\'`;]/g, '')
+        // Hapus newline berlebihan
+        .replace(/[\r\n]{3,}/g, '\n\n')
+        // Hapus spasi berlebihan
+        .replace(/\s{5,}/g, ' ')
+        // Hapus karakter berulang berlebihan (aaaaaa / !!!!!!)
+        .replace(/(.)\1{9,}/g, '$1$1$1')
+        .trim();
+}
+
+// ---- Validasi Nama ----
+function validateName(name) {
+    if (!name || name.length < 2 || name.length > 50) return false;
+    // Hanya huruf, spasi, titik, koma, apostrof
+    return /^[a-zA-Z\s\.,'\-]+$/.test(name);
+}
+
+// ---- Validasi Nomor WA ----
+function validatePhone(phone) {
+    const cleaned = phone.replace(/[\s\-\(\)]/g, '');
+    return /^(\+62|62|0)[0-9]{8,13}$/.test(cleaned);
+}
+
+// ---- Deteksi Virtex & Karakter Berbahaya ----
+function detectVirtex(text) {
+    const checks = [
+        // Karakter Arab berlebihan (Virtex klasik)
+        /[\u0600-\u06FF]{5,}/,
+        // Karakter Zalgo (teks berantakan)
+        /[\u0300-\u036F]{3,}/,
+        // Karakter invisible/zero-width
+        /[\u200B-\u200F\u2028-\u202F]/,
+        // Emoji berlebihan
+        /([\uD800-\uDBFF][\uDC00-\uDFFF]){5,}/,
+        // Karakter berulang ekstrem
+        /(.)\1{15,}/,
+        // Script injection
+        /<script|javascript:|on\w+\s*=|eval\(|alert\(|document\.|window\./gi,
+        // SQL injection
+        /('|--|;|DROP|SELECT|INSERT|UPDATE|DELETE|UNION|WHERE)\s/gi,
+    ];
+    return checks.some(pattern => pattern.test(text));
+}
+
+// ---- Cek Panjang Total Pesan ----
+function checkTotalLength(nama, wa, pesan) {
+    const total = (nama + wa + pesan).length;
+    return total <= 1000; // Maksimal 1000 karakter total
+}
+
+// ---- Tampilkan Error di Form ----
+function showFormError(message) {
+    // Hapus error lama kalau ada
+    const existing = document.querySelector('.form-error-msg');
+    if (existing) existing.remove();
+
+    const errDiv = document.createElement('p');
+    errDiv.className = 'form-error-msg';
+    errDiv.style.cssText = 'color:#ef4444;font-size:0.85rem;font-weight:600;margin-top:10px;text-align:center;';
+    errDiv.textContent = message;
+
+    const btn = document.getElementById('send-wa-btn');
+    btn.insertAdjacentElement('afterend', errDiv);
+    setTimeout(() => errDiv.remove(), 4000);
+}
+
+// ---- Event Listener Form Order ----
+document.getElementById('send-wa-btn').addEventListener('click', () => {
+    const nama = document.getElementById('nama').value.trim();
+    const wa = document.getElementById('whatsapp').value.trim();
+    const layanan = document.getElementById('layanan-select').value;
+    const pesan = document.getElementById('pesan').value.trim();
+    const now = Date.now();
+
+    // Cek apakah sedang diblokir
+    if (now < blockedUntil) {
+        const menitSisa = Math.ceil((blockedUntil - now) / 60000);
+        showFormError(`🚫 Terlalu banyak percobaan. Coba lagi dalam ${menitSisa} menit.`);
+        return;
+    }
+
+    // Rate limiting
+    if (now - lastOrderTime < ORDER_COOLDOWN) {
+        const detikSisa = Math.ceil((ORDER_COOLDOWN - (now - lastOrderTime)) / 1000);
+        showFormError(`⏳ Tunggu ${detikSisa} detik sebelum mengirim lagi.`);
+        return;
+    }
+
+    // Hitung percobaan gagal
+    orderAttempts++;
+    if (orderAttempts >= MAX_ATTEMPTS) {
+        blockedUntil = now + BLOCK_DURATION;
+        orderAttempts = 0;
+        showFormError('🚫 Terlalu banyak percobaan. Anda diblokir sementara 5 menit.');
+        return;
+    }
+
+    // Validasi nama
+    if (!nama) { showFormError('⚠️ Mohon isi nama lengkap Anda.'); return; }
+    if (!validateName(nama)) {
+        showFormError('⚠️ Nama hanya boleh berisi huruf dan spasi.'); return;
+    }
+
+    // Validasi WA
+    if (!wa) { showFormError('⚠️ Mohon isi nomor WhatsApp Anda.'); return; }
+    if (!validatePhone(wa)) {
+        showFormError('⚠️ Format nomor WhatsApp tidak valid. Contoh: 08123456789'); return;
+    }
+
+    // Validasi layanan
+    if (!layanan) { showFormError('⚠️ Mohon pilih layanan yang diminati.'); return; }
+
+    // Cek panjang total
+    if (!checkTotalLength(nama, wa, pesan)) {
+        showFormError('⚠️ Input terlalu panjang.'); return;
+    }
+
+    // Deteksi Virtex & karakter berbahaya
+    if (detectVirtex(nama) || detectVirtex(pesan)) {
+        showFormError('⚠️ Input mengandung karakter yang tidak diizinkan.');
+        // Blokir langsung kalau ada Virtex
+        blockedUntil = now + BLOCK_DURATION;
+        return;
+    }
+
+    // Semua aman — sanitasi dan kirim
+    const cleanNama = sanitizeInput(nama);
+    const cleanPesan = sanitizeInput(pesan);
+
+    // Reset percobaan kalau berhasil
+    orderAttempts = 0;
+    lastOrderTime = Date.now();
+
+    window.open(buildWaLink(layanan, cleanNama, cleanPesan || 'Ingin konsultasi lebih lanjut.'), '_blank');
+});
+
+
+// Character counter form kontak
+const pesanInput = document.getElementById('pesan');
+const pesanCounter = document.getElementById('pesan-counter');
+
+pesanInput.addEventListener('input', function() {
+    const length = this.value.length;
+    pesanCounter.textContent = `${length}/500 karakter`;
+    
+    pesanCounter.classList.remove('warning', 'danger');
+    if (length >= 400) pesanCounter.classList.add('danger');
+    else if (length >= 300) pesanCounter.classList.add('warning');
+});
+
 
 
 // ===== SUPABASE KOMENTAR =====
