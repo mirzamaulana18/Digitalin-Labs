@@ -245,3 +245,145 @@ const observer = new IntersectionObserver((entries) => {
 }, { threshold: 0.4, rootMargin: '-80px 0px 0px 0px' });
 
 sections.forEach(s => observer.observe(s));
+
+
+// ===== SUPABASE KOMENTAR =====
+const SUPABASE_URL = 'https://mmbyfihyirhfwqwiqvvi.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1tYnlmaWh5aXJoZndxd2lxdnZpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg5NTgwODAsImV4cCI6MjA5NDUzNDA4MH0.6g0_nuPTew3sIJkaQ5yP_Ip45NYcB-uF3coBAL6cQQk';
+
+// Ambil semua review dari Supabase
+async function loadReviews() {
+    const reviewsList = document.getElementById('reviews-list');
+    try {
+        const res = await fetch(`${SUPABASE_URL}/rest/v1/komentar?order=created_at.desc&limit=20`, {
+            headers: {
+                'apikey': SUPABASE_KEY,
+                'Authorization': `Bearer ${SUPABASE_KEY}`
+            }
+        });
+        const data = await res.json();
+
+        if (!data || data.length === 0) {
+            reviewsList.innerHTML = '<p class="no-reviews">Belum ada review. Jadilah yang pertama! 😊</p>';
+            return;
+        }
+
+        reviewsList.innerHTML = data.map(review => `
+            <div class="review-card">
+                <div class="review-card-header">
+                    <strong>${escapeHtml(review.nama)}</strong>
+                    <span class="review-card-stars">${'★'.repeat(review.rating)}${'☆'.repeat(5 - review.rating)}</span>
+                </div>
+                <p>${escapeHtml(review.pesan)}</p>
+                <span class="review-card-date">${formatTanggal(review.created_at)}</span>
+            </div>
+        `).join('');
+    } catch (err) {
+        reviewsList.innerHTML = '<p class="no-reviews">Gagal memuat review. Coba refresh halaman.</p>';
+    }
+}
+
+// Kirim review baru ke Supabase
+async function submitReview() {
+    const nama = document.getElementById('review-nama').value.trim();
+    const pesan = document.getElementById('review-pesan').value.trim();
+    const status = document.getElementById('review-status');
+    const btn = document.getElementById('submit-review');
+
+    // Validasi
+    if (!nama || nama.length < 2) {
+        showStatus('⚠️ Nama minimal 2 karakter.', 'error'); return;
+    }
+    if (selectedRating === 0) {
+        showStatus('⚠️ Pilih rating bintang dulu.', 'error'); return;
+    }
+    if (!pesan || pesan.length < 10) {
+        showStatus('⚠️ Review minimal 10 karakter.', 'error'); return;
+    }
+
+    // Loading state
+    btn.disabled = true;
+    btn.textContent = 'Mengirim...';
+
+    try {
+        const res = await fetch(`${SUPABASE_URL}/rest/v1/komentar`, {
+            method: 'POST',
+            headers: {
+                'apikey': SUPABASE_KEY,
+                'Authorization': `Bearer ${SUPABASE_KEY}`,
+                'Content-Type': 'application/json',
+                'Prefer': 'return=minimal'
+            },
+            body: JSON.stringify({ nama, pesan, rating: selectedRating })
+        });
+
+        if (res.ok) {
+            showStatus('✅ Review berhasil dikirim! Terima kasih 🙏', 'success');
+            // Reset form
+            document.getElementById('review-nama').value = '';
+            document.getElementById('review-pesan').value = '';
+            document.getElementById('char-count').textContent = '0/500 karakter';
+            selectedRating = 0;
+            document.querySelectorAll('.star').forEach(s => s.classList.remove('active'));
+            loadReviews(); // Refresh daftar review
+        } else {
+            showStatus('❌ Gagal mengirim. Coba lagi.', 'error');
+        }
+    } catch (err) {
+        showStatus('❌ Koneksi bermasalah. Coba lagi.', 'error');
+    }
+
+    btn.disabled = false;
+    btn.textContent = 'Kirim Review';
+}
+
+// Helper functions
+function showStatus(msg, type) {
+    const status = document.getElementById('review-status');
+    status.textContent = msg;
+    status.className = 'review-status ' + type;
+    setTimeout(() => { status.textContent = ''; status.className = 'review-status'; }, 4000);
+}
+
+function escapeHtml(text) {
+    return text.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+function formatTanggal(dateStr) {
+    return new Date(dateStr).toLocaleDateString('id-ID', {
+        day: 'numeric', month: 'long', year: 'numeric'
+    });
+}
+
+// Star rating interaction
+let selectedRating = 0;
+document.querySelectorAll('.star').forEach(star => {
+    star.addEventListener('mouseover', function() {
+        const val = parseInt(this.dataset.value);
+        document.querySelectorAll('.star').forEach((s, i) => {
+            s.classList.toggle('active', i < val);
+        });
+    });
+    star.addEventListener('mouseout', function() {
+        document.querySelectorAll('.star').forEach((s, i) => {
+            s.classList.toggle('active', i < selectedRating);
+        });
+    });
+    star.addEventListener('click', function() {
+        selectedRating = parseInt(this.dataset.value);
+        document.querySelectorAll('.star').forEach((s, i) => {
+            s.classList.toggle('active', i < selectedRating);
+        });
+    });
+});
+
+// Char counter
+document.getElementById('review-pesan').addEventListener('input', function() {
+    document.getElementById('char-count').textContent = `${this.value.length}/500 karakter`;
+});
+
+// Submit button
+document.getElementById('submit-review').addEventListener('click', submitReview);
+
+// Load reviews saat halaman dibuka
+loadReviews();

@@ -1154,6 +1154,140 @@ footer {
     .pricing-card.featured:hover { transform: translateY(-4px); }
 }
 
+
+/* ===== REVIEW FORM ===== */
+.review-form-wrapper {
+    background: var(--card-bg);
+    border-radius: var(--radius);
+    padding: 40px;
+    border: 1px solid var(--border-color);
+    box-shadow: var(--card-shadow);
+    max-width: 700px;
+    margin: 60px auto 0;
+    text-align: center;
+}
+
+.review-form-wrapper h3 {
+    font-size: 1.4rem;
+    font-weight: 700;
+    margin-bottom: 8px;
+}
+
+.review-form-wrapper > p {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    margin-bottom: 28px;
+}
+
+.review-form {
+    text-align: left;
+}
+
+/* Star Rating */
+.star-rating {
+    display: flex;
+    gap: 8px;
+    margin-top: 4px;
+}
+
+.star {
+    font-size: 2rem;
+    color: var(--border-color);
+    cursor: pointer;
+    transition: var(--transition);
+    line-height: 1;
+}
+
+.star.active,
+.star:hover {
+    color: #f59e0b;
+}
+
+/* Char count */
+#char-count {
+    display: block;
+    text-align: right;
+    font-size: 0.78rem;
+    color: var(--text-muted);
+    margin-top: 6px;
+}
+
+/* Status pesan */
+.review-status {
+    margin-top: 12px;
+    font-size: 0.88rem;
+    font-weight: 600;
+    text-align: center;
+    min-height: 20px;
+}
+
+.review-status.success { color: #10b981; }
+.review-status.error { color: #ef4444; }
+
+/* Public Reviews */
+.public-reviews {
+    max-width: 700px;
+    margin: 40px auto 0;
+}
+
+.public-reviews h3 {
+    font-size: 1.3rem;
+    font-weight: 700;
+    margin-bottom: 24px;
+    text-align: center;
+}
+
+.review-card {
+    background: var(--card-bg);
+    border-radius: var(--radius);
+    padding: 24px;
+    border: 1px solid var(--border-color);
+    box-shadow: var(--card-shadow);
+    margin-bottom: 16px;
+}
+
+.review-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.review-card-header strong {
+    font-size: 0.95rem;
+}
+
+.review-card-stars {
+    color: #f59e0b;
+    font-size: 0.95rem;
+}
+
+.review-card p {
+    font-size: 0.88rem;
+    color: var(--text-muted);
+    line-height: 1.7;
+    margin-bottom: 8px;
+}
+
+.review-card-date {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+}
+
+.loading-reviews {
+    text-align: center;
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    padding: 20px 0;
+}
+
+.no-reviews {
+    text-align: center;
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    padding: 20px 0;
+}
+
 /* =============================================
    RESPONSIVE — Mobile
    ============================================= */
@@ -1209,3 +1343,4 @@ footer {
     .hero-stats { flex-direction: column; gap: 16px; }
     .stat-divider { width: 60px; height: 1px; }
 }
+
