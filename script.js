@@ -79,10 +79,10 @@ function buildWaLink(service, nama, detail) {
     const cleanService = sanitizeInput(service);
     const cleanNama = sanitizeInput(nama);
     const cleanDetail = sanitizeInput(detail || '');
-    let msg = `Halo DigitalinLabs! 👋\n\nSaya tertarik dengan *${cleanService}*.\n`;
+    let msg = `Halo DigitalinLabs! \n\nSaya tertarik dengan *${cleanService}*.\n`;
     if (cleanNama) msg += `\nNama saya: *${cleanNama}*`;
     if (cleanDetail) msg += `\nDetail kebutuhan: ${cleanDetail}`;
-    msg += `\n\nMohon informasi lebih lanjut. Terima kasih! 🙏`;
+    msg += `\n\nMohon informasi lebih lanjut. Terima kasih!`;
     return `https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(msg)}`;
 }
 
